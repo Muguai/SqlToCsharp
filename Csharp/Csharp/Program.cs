@@ -10,7 +10,7 @@
             ICustomerRepository customerRepository = new CustomerRepository();
             IList<Customer> customers = customerRepository.GetAllCustomerData();
 
-            Console.WriteLine("------------------ All Customer -----------------");
+            Console.WriteLine("------------------ All Customers -----------------");
 
             foreach (Customer customer in customers)
             {
@@ -34,17 +34,37 @@
                    $"Phone Number: {singleCustomer.PhoneNumber} " +
                    $"Email: {singleCustomer.Email}");
 
-            Console.WriteLine("------------------ Single Customer By Name -----------------");
+            Console.WriteLine("------------------ Customers By Name -----------------");
 
 
-            Customer singleCustomerName = customerRepository.GetCustomerData("Diego");
+            IList<Customer> customerByName = customerRepository.GetCustomerData("Diego");
 
-            Console.WriteLine($"First Name: {singleCustomerName.FirstName} " +
-                   $"Last Name: {singleCustomerName.LastName} " +
-                   $"Country: {singleCustomerName.Country} " +
-                   $"PostalCode: {singleCustomerName.PostalCode} " +
-                   $"Phone Number: {singleCustomerName.PhoneNumber} " +
-                   $"Email: {singleCustomerName.Email}");
+            foreach (Customer customer in customerByName)
+            {
+                Console.WriteLine($"First Name: {customer.FirstName} " +
+                    $"Last Name: {customer.LastName} " +
+                    $"Country: {customer.Country} " +
+                    $"PostalCode: {customer.PostalCode} " +
+                    $"Phone Number: {customer.PhoneNumber} " +
+                    $"Email: {customer.Email}");
+            }
+
+
+            Console.WriteLine("------------------ Customers By Offset/Limit -----------------");
+
+
+            IList<Customer> customerOffsetLimit = customerRepository.GetCustomerData(3,5);
+
+
+            foreach (Customer customer in customerOffsetLimit)
+            {
+                Console.WriteLine($"First Name: {customer.FirstName} " +
+                    $"Last Name: {customer.LastName} " +
+                    $"Country: {customer.Country} " +
+                    $"PostalCode: {customer.PostalCode} " +
+                    $"Phone Number: {customer.PhoneNumber} " +
+                    $"Email: {customer.Email}");
+            }
         }
     }
 }

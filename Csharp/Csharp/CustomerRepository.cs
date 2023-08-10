@@ -44,13 +44,13 @@ namespace Csharp
             using SqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
-            {   
-                customer = customer = createCustomerFromReader(reader);           
+            {
+                customer = createCustomerFromReader(reader);
             }
             return customer;
         }
 
-        public Customer GetCustomerData(string name)
+        public IList<Customer> GetCustomerData(string name)
         {
             
             using SqlConnection connection = new(DbConfig.GetConnectionString());
@@ -60,16 +60,39 @@ namespace Csharp
 
             using SqlCommand command = new(sqlQuery, connection);
 
-            Customer customer = new();
+            IList<Customer> customers = new List<Customer>();
 
             using SqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
-                customer = createCustomerFromReader(reader);
-
+                Customer customer = createCustomerFromReader(reader);
+                customers.Add(customer);
             }
-            return customer;
+            return customers;
+        }
+
+        public IList<Customer> GetCustomerData(int offset, int limit)
+        {
+
+            using SqlConnection connection = new(DbConfig.GetConnectionString());
+            connection.Open();
+
+            string sqlQuery = $"SELECT * FROM Customer ORDER BY CustomerId OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY";
+
+            using SqlCommand command = new(sqlQuery, connection);
+
+            IList<Customer> customers = new List<Customer>();
+
+            using SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Customer customer = createCustomerFromReader(reader);
+                customers.Add(customer);
+            }
+
+            return customers;
         }
 
         private Customer createCustomerFromReader(SqlDataReader reader)

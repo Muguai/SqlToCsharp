@@ -8,6 +8,7 @@ namespace Csharp
 {
     internal interface ICustomerRepository
     {
+        /// <returns>All Customers</returns>
         IList<Customer> GetAllCustomerData();
 
         /// <param name="id"></param>
@@ -15,10 +16,13 @@ namespace Csharp
         Customer GetCustomerData(int id);
 
         /// <param name="name"></param>
-        /// <returns>Customer with the name provided</returns>
-        Customer GetCustomerData(string name);
+        /// <returns>Customers with the name provided</returns>
+        IList<Customer> GetCustomerData(string name);
 
-
+        /// <param name="offset"></param>
+        /// <param name="limit"></param>
+        /// <returns>List of Customers from offset with limit</returns>
+        IList<Customer> GetCustomerData(int offset, int limit);
 
 
     }
