@@ -1,0 +1,20 @@
+CREATE TABLE SuperHero(
+	id INT IDENTITY(1, 1),
+	Name VARCHAR(50),
+	Alias VARCHAR(50),
+	Orgin VARCHAR(50),
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE Assistant(
+	id INT IDENTITY(1, 1),
+	Name VARCHAR(50),
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE Power(
+	id INT IDENTITY(1, 1),
+	Name VARCHAR(50),
+	Description TEXT,
+	PRIMARY KEY(id)
+);
