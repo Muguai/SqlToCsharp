@@ -14,5 +14,5 @@ To run the program make sure you have installed the following development enviro
 - SQL Server Management Studio
 
 ## Authors
-Fredrik Hammar: fredrik.hammar@se.experis.com https://github.com/Muguai
-\Emma Hogstrand: emma.hogstrand@se.experis.com https://github.com/emmahogstrand
+Fredrik Hammar: fredrik.hammar@se.experis.com https://github.com/Muguai \
+Emma Hogstrand: emma.hogstrand@se.experis.com https://github.com/emmahogstrand
