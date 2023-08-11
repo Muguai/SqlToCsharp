@@ -123,7 +123,7 @@ namespace Csharp.Repository
                                 FROM Customer 
                                 ORDER BY CustomerId 
                                 OFFSET @Offset ROWS 
-                            FETCH NEXT @Limit ROWS ONLY";
+                                FETCH NEXT @Limit ROWS ONLY";
 
             using SqlCommand cmd = new(sqlQuery, connection);
 
