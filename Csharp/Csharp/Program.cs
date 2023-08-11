@@ -56,13 +56,13 @@ namespace Csharp
 
             Console.WriteLine("\n------------------ Update Customer -----------------\n");
 
-            Customer updateCustomer = customerRepository.GetCustomerData(60);
+            Customer updateCustomer = customerRepository.GetCustomerData(61);
 
             updateCustomer.LastName = "Annaton";
 
             customerRepository.UpdateCustomer(updateCustomer);
 
-            Customer updatedCustomer = customerRepository.GetCustomerData(60);
+            Customer updatedCustomer = customerRepository.GetCustomerData(61);
 
             PrintSingleCustomer(updatedCustomer);
 
@@ -97,11 +97,11 @@ namespace Csharp
         private static void PrintSingleCustomer(Customer customer)
         {
 
-            Console.WriteLine($"First Name: {customer.FirstName} " +
-                   $"Last Name: {customer.LastName} " +
-                   $"Country: {customer.Country} " +
-                   $"PostalCode: {customer.PostalCode} " +
-                   $"Phone Number: {customer.PhoneNumber} " +
+            Console.WriteLine($"First Name: {customer.FirstName} - " +
+                   $"Last Name: {customer.LastName} - " +
+                   $"Country: {customer.Country} - " +
+                   $"PostalCode: {customer.PostalCode} - " +
+                   $"Phone Number: {customer.PhoneNumber} - " +
                    $"Email: {customer.Email}");
         }
 

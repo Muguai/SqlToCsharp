@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Xml;
 using Csharp.models;
+using System.Xml.Linq;
 
 namespace Csharp.Repository
 {
@@ -16,13 +17,21 @@ namespace Csharp.Repository
             using SqlConnection connection = new(DbConfig.GetConnectionString());
             connection.Open();
 
-            string sqlQuery = "SELECT * FROM Customer";
+            string sqlQuery = @"SELECT 
+                                    CustomerId, 
+                                    FirstName, 
+                                    LastName, 
+                                    Country, 
+                                    PostalCode, 
+                                    Phone, 
+                                    Email 
+                                FROM Customer";
 
-            using SqlCommand command = new(sqlQuery, connection);
+            using SqlCommand cmd = new(sqlQuery, connection);
 
             IList<Customer> customers = new List<Customer>();
 
-            using SqlDataReader reader = command.ExecuteReader();
+            using SqlDataReader reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
@@ -37,13 +46,24 @@ namespace Csharp.Repository
             using SqlConnection connection = new(DbConfig.GetConnectionString());
             connection.Open();
 
-            string sqlQuery = $"SELECT * FROM Customer WHERE CustomerId={id}";
+            string sqlQuery = @"SELECT 
+                                    CustomerId, 
+                                    FirstName, 
+                                    LastName, 
+                                    Country, 
+                                    PostalCode, 
+                                    Phone, 
+                                    Email 
+                                FROM Customer 
+                                WHERE CustomerId=@Id";
 
-            using SqlCommand command = new(sqlQuery, connection);
+            using SqlCommand cmd = new(sqlQuery, connection);
+
+            cmd.Parameters.AddWithValue("@Id", id);
 
             Customer customer = new();
 
-            using SqlDataReader reader = command.ExecuteReader();
+            using SqlDataReader reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
@@ -58,13 +78,25 @@ namespace Csharp.Repository
             using SqlConnection connection = new(DbConfig.GetConnectionString());
             connection.Open();
 
-            string sqlQuery = $"SELECT * FROM Customer WHERE FirstName LIKE '%{name}%'";
+            string sqlQuery = @"SELECT 
+                                    CustomerId, 
+                                    FirstName, 
+                                    LastName, 
+                                    Country, 
+                                    PostalCode, 
+                                    Phone, 
+                                    Email 
+                                FROM Customer 
+                                WHERE FirstName 
+                                LIKE '%@Name%'";
 
-            using SqlCommand command = new(sqlQuery, connection);
+            using SqlCommand cmd = new(sqlQuery, connection);
+
+            cmd.Parameters.AddWithValue("@Name", name);
 
             IList<Customer> customers = new List<Customer>();
 
-            using SqlDataReader reader = command.ExecuteReader();
+            using SqlDataReader reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
@@ -80,13 +112,27 @@ namespace Csharp.Repository
             using SqlConnection connection = new(DbConfig.GetConnectionString());
             connection.Open();
 
-            string sqlQuery = $"SELECT * FROM Customer ORDER BY CustomerId OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY";
+            string sqlQuery = @"SELECT 
+                                    CustomerId, 
+                                    FirstName, 
+                                    LastName, 
+                                    Country, 
+                                    PostalCode, 
+                                    Phone, 
+                                    Email 
+                                FROM Customer 
+                                ORDER BY CustomerId 
+                                OFFSET @Offset ROWS 
+                            FETCH NEXT @Limit ROWS ONLY";
 
-            using SqlCommand command = new(sqlQuery, connection);
+            using SqlCommand cmd = new(sqlQuery, connection);
 
+            cmd.Parameters.AddWithValue("@Offset", offset);
+            cmd.Parameters.AddWithValue("@Limit", limit);
+           
             IList<Customer> customers = new List<Customer>();
 
-            using SqlDataReader reader = command.ExecuteReader();
+            using SqlDataReader reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
@@ -104,7 +150,21 @@ namespace Csharp.Repository
             connection.Open();
 
             // NB! Insert variable elements into SQL command using SqlCommand.Parameters.AddWithValue()
-            string sqlQuery = "INSERT INTO Customer (FirstName, LastName, Country, PostalCode, Phone, Email) VALUES (@FirstName, @LastName, @Country, @PostalCode, @Phone, @Email)";
+            string sqlQuery = @"INSERT INTO 
+                                    Customer 
+                                        (FirstName, 
+                                         LastName, 
+                                         Country,  
+                                         PostalCode,    
+                                         Phone, 
+                                         Email) 
+                                VALUES 
+                                    (@FirstName, 
+                                     @LastName, 
+                                     @Country, 
+                                     @PostalCode, 
+                                     @Phone, 
+                                     @Email)";
 
             SqlCommand cmd = new(sqlQuery, connection);
             cmd.Parameters.AddWithValue("@FirstName", newCustomer.FirstName);
@@ -126,7 +186,15 @@ namespace Csharp.Repository
             connection.Open();
 
             // NB! Insert variable elements into SQL command using SqlCommand.Parameters.AddWithValue()
-            string sql = "UPDATE Customer SET FirstName=@FirstName, LastName=@LastName, Country=@Country, PostalCode=@PostalCode, Phone=@Phone, Email=@Email  WHERE CustomerId=@Id";
+            string sql = @"UPDATE Customer 
+                           SET 
+                               FirstName=@FirstName, 
+                               LastName=@LastName, 
+                               Country=@Country, 
+                               PostalCode=@PostalCode, 
+                               Phone=@Phone, 
+                               Email=@Email  
+                           WHERE CustomerId=@Id";
 
             SqlCommand cmd = new(sql, connection);
             cmd.Parameters.AddWithValue("@Id", updateCustomer.Id);
@@ -146,13 +214,15 @@ namespace Csharp.Repository
             using SqlConnection connection = new(DbConfig.GetConnectionString());
             connection.Open();
 
-            string sqlQuery = $"SELECT Country, count(customerId) FROM Customer group by Country ORDER BY count(Country) DESC";
+            string sqlQuery = @"SELECT Country, count(customerId) 
+                                FROM Customer group by Country 
+                                ORDER BY count(Country) DESC";
 
-            using SqlCommand command = new(sqlQuery, connection);
+            using SqlCommand cmd = new(sqlQuery, connection);
 
             Dictionary<string, int> countByCountry = new Dictionary<string, int>();
 
-            using SqlDataReader reader = command.ExecuteReader();
+            using SqlDataReader reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
@@ -167,44 +237,30 @@ namespace Csharp.Repository
             using SqlConnection connection = new(DbConfig.GetConnectionString());
             connection.Open();
 
-            string sqlQuery = @"
-                        SELECT
-                            c.CustomerId,
-                            c.FirstName,
-                            c.LastName,
-                            c.Country,
-                            c.PostalCode,
-                            c.Phone,
-                            c.Email,
-                            SUM(i.Total) AS TotalSpending
-                        FROM Invoice i
-                        INNER JOIN Customer c ON i.CustomerId = c.CustomerId
-                        GROUP BY c.CustomerId, c.FirstName, c.LastName, c.Country, c.PostalCode, c.Phone, c.Email
-                        ORDER BY TotalSpending DESC;";
+            string sqlQuery = @"SELECT
+                                    c.CustomerId,
+                                    c.FirstName,
+                                    c.LastName,
+                                    c.Country,
+                                    c.PostalCode,
+                                    c.Phone,
+                                    c.Email,
+                                    SUM(i.Total) AS TotalSpending
+                                FROM Invoice i
+                                INNER JOIN Customer c ON i.CustomerId = c.CustomerId
+                                GROUP BY c.CustomerId, c.FirstName, c.LastName, c.Country, c.PostalCode, c.Phone, c.Email
+                                ORDER BY TotalSpending DESC;";
 
-            using SqlCommand command = new(sqlQuery, connection);
+            using SqlCommand cmd = new(sqlQuery, connection);
 
             Dictionary<Customer, decimal> whoSpentTheMost = new Dictionary<Customer, decimal>();
 
-            using SqlDataReader reader = command.ExecuteReader();
+            using SqlDataReader reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
-                Customer tempCustomer = new();
-                tempCustomer.Id = reader.GetInt32(0);
-                tempCustomer.FirstName = reader.GetString(1);
-                tempCustomer.LastName = reader.GetString(2);
-                tempCustomer.Country = reader.GetString(3);
-                if (!reader.IsDBNull(4))
-                {
-                    tempCustomer.PostalCode = reader.GetString(4);
-                }
-                if (!reader.IsDBNull(5))
-                {
-                    tempCustomer.PhoneNumber = reader.GetString(5);
-                }
-                tempCustomer.Email = reader.GetString(6);
-                decimal total =  reader.GetDecimal(7);
+                Customer tempCustomer = createCustomerFromReader(reader);
+                decimal total = reader.GetDecimal(7);
                 whoSpentTheMost.Add(tempCustomer, total);
             }
 
@@ -216,8 +272,7 @@ namespace Csharp.Repository
             using SqlConnection connection = new(DbConfig.GetConnectionString());
             connection.Open();
 
-            string sqlQuery = $@"
-                                SELECT TOP 1 WITH TIES
+            string sqlQuery = @"SELECT TOP 1 WITH TIES
                                     g.Name AS FavoriteGenre
                                 FROM INVOICE i
                                 JOIN INVOICELINE il ON i.InvoiceId = il.InvoiceId
@@ -227,13 +282,13 @@ namespace Csharp.Repository
                                 GROUP BY g.Name
                                 ORDER BY COUNT(*) DESC;";
 
-            using SqlCommand command = new(sqlQuery, connection);
+            using SqlCommand cmd = new(sqlQuery, connection);
 
-            command.Parameters.AddWithValue("@Id", customer.Id);
+            cmd.Parameters.AddWithValue("@Id", customer.Id);
 
             string customersFavoriteGenre = "None";
 
-            using SqlDataReader reader = command.ExecuteReader();
+            using SqlDataReader reader = cmd.ExecuteReader();
 
             bool FirstLine = true;
 
@@ -256,16 +311,16 @@ namespace Csharp.Repository
             tempCustomer.Id = reader.GetInt32(0);
             tempCustomer.FirstName = reader.GetString(1);
             tempCustomer.LastName = reader.GetString(2);
-            tempCustomer.Country = reader.GetString(7);
-            if (!reader.IsDBNull(8))
+            tempCustomer.Country = reader.GetString(3);
+            if (!reader.IsDBNull(4))
             {
-                tempCustomer.PostalCode = reader.GetString(8);
+                tempCustomer.PostalCode = reader.GetString(4);
             }
-            if (!reader.IsDBNull(9))
+            if (!reader.IsDBNull(5))
             {
-                tempCustomer.PhoneNumber = reader.GetString(9);
+                tempCustomer.PhoneNumber = reader.GetString(5);
             }
-            tempCustomer.Email = reader.GetString(11);
+            tempCustomer.Email = reader.GetString(6);
             return tempCustomer;
         }
     }
