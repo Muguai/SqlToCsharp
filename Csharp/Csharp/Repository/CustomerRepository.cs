@@ -150,36 +150,16 @@ namespace Csharp.Repository
 
             using SqlCommand command = new(sqlQuery, connection);
 
-            List<(string, int)> countByCountry = new List<(string, int)>();
+            Dictionary<string, int> countByCountry = new Dictionary<string, int>();
 
             using SqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
-                countByCountry.Add((reader.GetString(0), reader.GetInt32(1)));
+                countByCountry.Add(reader.GetString(0), reader.GetInt32(1));
             }
 
             return new CustomerCountry(countByCountry);
-        }
-
-
-        private Customer createCustomerFromReader(SqlDataReader reader)
-        {
-            Customer tempCustomer = new();
-            tempCustomer.Id = reader.GetInt32(0);
-            tempCustomer.FirstName = reader.GetString(1);
-            tempCustomer.LastName = reader.GetString(2);
-            tempCustomer.Country = reader.GetString(7);
-            if (!reader.IsDBNull(8))
-            {
-                tempCustomer.PostalCode = reader.GetString(8);
-            }
-            if (!reader.IsDBNull(9))
-            {
-                tempCustomer.PhoneNumber = reader.GetString(9);
-            }
-            tempCustomer.Email = reader.GetString(11);
-            return tempCustomer;
         }
 
         public CustomerSpender GetCustomersWhoSpendMost()
@@ -268,6 +248,25 @@ namespace Csharp.Repository
             }
 
             return new CustomerGenre(customersFavoriteGenre, customer);
+        }
+
+        private Customer createCustomerFromReader(SqlDataReader reader)
+        {
+            Customer tempCustomer = new();
+            tempCustomer.Id = reader.GetInt32(0);
+            tempCustomer.FirstName = reader.GetString(1);
+            tempCustomer.LastName = reader.GetString(2);
+            tempCustomer.Country = reader.GetString(7);
+            if (!reader.IsDBNull(8))
+            {
+                tempCustomer.PostalCode = reader.GetString(8);
+            }
+            if (!reader.IsDBNull(9))
+            {
+                tempCustomer.PhoneNumber = reader.GetString(9);
+            }
+            tempCustomer.Email = reader.GetString(11);
+            return tempCustomer;
         }
     }
 }

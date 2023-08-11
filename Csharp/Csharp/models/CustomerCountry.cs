@@ -8,18 +8,35 @@ namespace Csharp.models
 {
     internal class CustomerCountry
     {
-        public List<(string, int)> customerCountryList { get; set; }
+        public Dictionary<string, int> customerCountryDict { get; set; }
 
-        public CustomerCountry(List<(string, int)> list) {
-            this.customerCountryList = list;
+        public CustomerCountry(Dictionary<string, int> dict) {
+            this.customerCountryDict = dict;
         }
 
-        public void Display()
+        /// <summary>
+        /// Displays All Countries and their customer amount
+        /// </summary>
+        public void DisplayAll()
         {
-            foreach ((string, int) country in customerCountryList)
+            foreach (KeyValuePair<string, int> country in customerCountryDict)
             {
-                Console.WriteLine($"{country.Item1}: {country.Item2}");
+                Console.WriteLine($"{country.Key}: {country.Value}");
             }
         }
+
+        /// <summary>
+        /// Displays one specific country and its customer amount
+        /// </summary>
+        /// <param name="country"></param>
+        public void DisplaySpecific(string country)
+        {
+            if (customerCountryDict.TryGetValue(country, out int value))
+                Console.WriteLine($"{country}: {value}");
+            else
+                Console.WriteLine($"{country}: 0");
+        }
+
+
     }
 }

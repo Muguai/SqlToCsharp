@@ -19,9 +19,12 @@ namespace Csharp.models
             this.Customer = customer;
         }
 
+        /// <summary>
+        /// Display Customers Favorite Genre
+        /// </summary>
         public void Display()
         {
-            Console.WriteLine($"Name: {Customer.FirstName} {Customer.LastName} Favorite Genre:" + FavoriteGenre);
+            Console.WriteLine($"Name: {Customer.FirstName} {Customer.LastName} - Favorite Genre: " + FavoriteGenre);
         }
 
     }

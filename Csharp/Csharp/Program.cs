@@ -10,38 +10,38 @@ namespace Csharp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Console.WriteLine("Customer Info: \n");
 
 
             ICustomerRepository customerRepository = new CustomerRepository();
 
-            Console.WriteLine("------------------ All Customers -----------------");
+            Console.WriteLine("\n------------------ All Customers -----------------\n");
 
             IList<Customer> customers = customerRepository.GetAllCustomerData();
             PrintMultipleCustomers(customers);
 
-            Console.WriteLine("------------------ Single Customer By Id -----------------");
+            Console.WriteLine("\n------------------ Single Customer By Id -----------------\n");
 
 
             Customer singleCustomer = customerRepository.GetCustomerData(5);
 
             PrintSingleCustomer(singleCustomer);
-
-            Console.WriteLine("------------------ Customers By Name -----------------");
+            
+            Console.WriteLine("\n------------------ Customers By Name -----------------\n");
 
 
             IList<Customer> customerByName = customerRepository.GetCustomerData("Diego");
 
             PrintMultipleCustomers(customerByName);
 
-            Console.WriteLine("------------------ Customers By Offset/Limit -----------------");
+            Console.WriteLine("\n------------------ Customers By Offset/Limit -----------------\n");
 
 
             IList<Customer> customerOffsetLimit = customerRepository.GetCustomerData(3, 5);
 
             PrintMultipleCustomers(customerOffsetLimit);
-
-            Console.WriteLine("------------------ Add Customer -----------------");
+            
+            Console.WriteLine("\n------------------ Add Customer -----------------\n");
 
             Customer addCustomer = new Customer();
             addCustomer.FirstName = "Carl";
@@ -53,10 +53,8 @@ namespace Csharp
 
             //Outcommented for now since it adds a new carl everytime we run the program
             //Console.WriteLine("True if customer got add -> " + customerRepository.AddCustomer(addCustomer));
-            Console.WriteLine(" ");
-            Console.WriteLine("------------------ Update Customer -----------------");
-            Console.WriteLine(" ");
 
+            Console.WriteLine("\n------------------ Update Customer -----------------\n");
 
             Customer updateCustomer = customerRepository.GetCustomerData(60);
 
@@ -68,27 +66,20 @@ namespace Csharp
 
             PrintSingleCustomer(updatedCustomer);
 
-            Console.WriteLine(" ");
-            Console.WriteLine("------------------ Get Amount of Customer From Each Country -----------------");
-            Console.WriteLine(" ");
+            Console.WriteLine("\n------------------ Get Amount of Customer From Each Country -----------------\n");
 
 
             CustomerCountry customerCountry = customerRepository.GetCustomersFromCountry();
 
-            customerCountry.Display();
+            customerCountry.DisplayAll();
 
-            Console.WriteLine(" ");
-            Console.WriteLine("------------------ Get Amount of Customer From Each Country -----------------");
-            Console.WriteLine(" ");
-
+            Console.WriteLine("\n------------------ Get Amount of Customer From Each Country -----------------\n");
 
             CustomerSpender customerSpender = customerRepository.GetCustomersWhoSpendMost();
 
-            customerSpender.Display();
+            customerSpender.DisplayAll();
 
-            Console.WriteLine(" ");
-            Console.WriteLine("------------------ Get Most Popular Genre -----------------");
-            Console.WriteLine(" ");
+            Console.WriteLine("\n------------------ Get Most Popular Genre -----------------\n");
 
 
             List<Customer> customersReal = (List<Customer>)customers;
